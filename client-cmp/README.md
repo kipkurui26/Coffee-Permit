@@ -2,35 +2,21 @@
 
 ## Getting Started
 
-Follow these steps to install and run the frontend locally on your machine.
+### 1. Navigate into the Frontend Directory
 
-### 1. Clone the Repository
-
-You can clone the repository using **SSH** or **HTTPS**:
-
-**Using SSH**  
-```bash
-git clone git@github.com:kipkurui26/client-cmp.git  
-```
-
-**Using HTTPS**
-```bash
-git clone https://github.com/kipkurui26/client-cmp.git
-```
-
-### 2. Navigate into the Project Directory
 ```bash
 cd client-cmp
 ```
 
-### 3. Installing Dependencies
+### 2. Install Dependencies
+
 Make sure you have `Node.js` installed, then run:
 
 ```bash
 npm install
 ```
 
-### 4. Configure Environment Variables
+### 3. Configure Environment Variables
 
 Create a `.env` file in the project root:
 
@@ -53,7 +39,7 @@ VITE_WS_BASE_URL=wss://your-server-url.com/ws
 ```
 
 
-### 5. Start the Development Server
+### 4. Start the Development Server
 ```bash
 npm run dev
 ```

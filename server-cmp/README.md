@@ -11,25 +11,13 @@
 
 ## Getting Started
 
-### 1. Clone the Repository
-
-**Using SSH**
-```bash
-git clone git@github.com:kipkurui26/server-cmp.git
-```
-
-**Using HTTPS**
-```bash
-git clone https://github.com/kipkurui26/server-cmp.git
-```
-
-### 2. Navigate into the Project Directory
+### 1. Navigate into the Project Directory
 
 ```bash
 cd server-cmp
 ```
 
-### 3. Set Up a Virtual Environment
+### 2. Set Up a Virtual Environment
 
 **Linux / macOS:**
 ```bash
@@ -43,7 +31,7 @@ python -m venv .venv
 .venv\Scripts\activate
 ```
 
-### 4. Install Dependencies
+### 3. Install Dependencies
 
 ```bash
 pip install --upgrade pip
@@ -54,7 +42,7 @@ pip install -r requirements.txt
 
 ## Development Setup
 
-### 5. Configure Environment Variables
+### 4. Configure Environment Variables
 
 Copy the development environment file:
 
@@ -100,7 +88,7 @@ DEFAULT_ADMIN_PASSWORD=superuser-password
 
 > **Note:** In development, the database, Redis, and email settings below are optional — SQLite is used by default, and email falls back to the SMTP backend with `None` values (no emails are actually sent unless you configure SMTP).
 
-### 6. Configure settings.py for Development
+### 5. Configure settings.py for Development
 
 In `settings.py`, the following blocks must be in their **development state**:
 
@@ -139,7 +127,7 @@ redis_config = {
 # }
 ```
 
-### 7. Start Redis
+### 6. Start Redis
 
 Redis is required for Django Channels (real-time WebSocket features). Make sure Redis is running before starting the server.
 
@@ -161,14 +149,14 @@ redis-cli ping
 # Expected output: PONG
 ```
 
-### 8. Run Migrations
+### 7. Run Migrations
 
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-### 9. Create a Superuser
+### 8. Create a Superuser
 
 ```bash
 python manage.py create_admin
@@ -176,7 +164,7 @@ python manage.py create_admin
 
 This uses the `DEFAULT_ADMIN_EMAIL` and `DEFAULT_ADMIN_PASSWORD` values from your `.env` file.
 
-### 10. Start the Development Server
+### 9. Start the Development Server
 
 ```bash
 daphne -p 8000 server.asgi:application
@@ -184,18 +172,18 @@ daphne -p 8000 server.asgi:application
 
 The backend will be available at `http://127.0.0.1:8000`.
 
-### 11. Access the Admin Panel
+### 10. Access the Admin Panel
 
 Visit `http://127.0.0.1:8000/admin` and log in with your superuser credentials.
 
-### 12. Elevate Your Account to Admin
+### 11. Elevate Your Account to Admin
 
 1. Go to `http://127.0.0.1:8000/admin/users/user/`
 2. Click on your email address.
 3. Navigate to **Permissions**.
 4. Change your role from `Farmer` to `Admin`.
 
-### 13. Use the Frontend
+### 12. Use the Frontend
 
 1. Go to `http://localhost:3000`
 2. Log in using your credentials — you will be redirected to the admin dashboard.
@@ -205,7 +193,7 @@ Visit `http://127.0.0.1:8000/admin` and log in with your superuser credentials.
 
 ## Production Setup
 
-### 5. Configure Environment Variables
+### 4. Configure Environment Variables
 
 Copy the production environment file:
 
@@ -266,7 +254,7 @@ DEFAULT_ADMIN_PASSWORD=strong-superuser-password
 
 > **Gmail App Password:** Do not use your Gmail account password. Generate an App Password at Google Account → Security → 2-Step Verification → App Passwords.
 
-### 6. Configure settings.py for Production
+### 5. Configure settings.py for Production
 
 In `settings.py`, you need to swap three blocks from development to production state:
 
@@ -325,26 +313,26 @@ if config("REDIS_SSL", default=False, cast=bool):
 
 ---
 
-### 7. Collect Static Files
+### 6. Collect Static Files
 
 ```bash
 python manage.py collectstatic --noinput
 ```
 
-### 8. Run Migrations
+### 7. Run Migrations
 
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-### 9. Create a Superuser
+### 8. Create a Superuser
 
 ```bash
 python manage.py create_admin
 ```
 
-### 10. Start the Production Server
+### 9. Start the Production Server
 
 ```bash
 daphne -p 8000 server.asgi:application
