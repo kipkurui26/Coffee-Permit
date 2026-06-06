@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Permit #{{ permit.ref_no }} - View Only</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 2cm;
+        line-height: 1.4;
+        font-size: 12px;
+        background-color: #f8f9fa;
+      }
+      .container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .view-only-banner {
+        background-color: #fff3cd;
+        border: 1px solid #ffeaa7;
+        color: #856404;
+        padding: 15px;
+        margin-bottom: 20px;
+        text-align: center;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+      .download-expired {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        font-size: 12px;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #333;
+        padding-bottom: 15px;
+      }
+      .title {
+        font-size: 20pt;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #333;
+      }
+      .permit-info {
+        margin-bottom: 15px;
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      .section {
+        margin-bottom: 20px;
+      }
+      .section-title {
+        font-weight: bold;
+        font-size: 14pt;
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #333;
+        color: #495057;
+      }
+      .two-column {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+      }
+      th, td {
+        border: 1px solid #333;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #e9ecef;
+        font-weight: bold;
+      }
+      .signature-section {
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .signature-block {
+        display: inline-block;
+        vertical-align: top;
+        width: 45%;
+      }
+      .status {
+        padding: 4px 9px;
+        border-radius: 3px;
+        font-weight: bold;
+        display: inline-block;
+        margin-top: 2px;
+      }
+      .status-approved { 
+        background-color: #d4edda; 
+        color: #155724;
+      }
+      .qr-code-section {
+        text-align: center;
+        margin-top: 25px;
+        margin-bottom: 15px;
+      }
+      .qr-code-container {
+        display: inline-block;
+        padding: 15px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+      }
+      .qr-code-image {
+        width: 120px;
+        height: 120px;
+        display: block;
+        margin: 0 auto;
+      }
+      .qr-code-text {
+        font-size: 11px;
+        margin-top: 8px;
+        color: #666;
+        text-align: center;
+      }
+      .footer {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 10px;
+        color: #666;
+        border-top: 1px solid #ddd;
+        padding-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="view-only-banner">
+        <strong>VIEW ONLY - DOWNLOAD PERIOD EXPIRED</strong><br>
+        This permit can only be viewed. Download period ended {{ remaining_days }} days ago.
+      </div>
+
+      <div class="download-expired">
+        <strong>Note:</strong> This permit's download period has expired. 
+        The original PDF can only be accessed by authorized users through the system.
+      </div>
+
+      <div class="header">
+        <div class="title">Coffee Movement Permit</div>
+      </div>
+
+      <div class="permit-info">
+        <div><strong>Ref No:</strong> {{ permit.ref_no }}</div>
+        <div><strong>Issue Date:</strong> {{ permit.approved_at|date:"F jS, Y" }}</div>
+        <div><strong>Status:</strong> <span class="status status-{{ permit.status|lower }}">{{ permit.status }}</span></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">LICENSEE INFORMATION</div>
+        <div class="two-column">
+          <div><strong>Society:</strong> {{ permit.society.name }}</div>
+          <div><strong>Factory:</strong> {{ permit.factory.name }}</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">COFFEE QUANTITY DETAILS</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Grade</th>
+              <th>Weight/Bag (kg)</th>
+              <th>No of Bags</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in permit.coffee_quantities_full %}
+            <tr>
+              <td>{{ item.coffee_grade.grade }}</td>
+              <td>{{ item.coffee_grade.weight_per_bag|floatformat:2 }}</td>
+              <td>{% if item.bags_quantity %}{{ item.bags_quantity }}{% else %}NIL{% endif %}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="4">No coffee grades specified</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <div class="section-title">COFFEE DESTINATION</div>
+        <div class="two-column">
+          <div><strong>Mill/W.House:</strong> {{ permit.warehouse.name }}</div>
+          <div><strong>County:</strong> {{ permit.warehouse.county }}</div>
+        </div>
+        <div>
+          <div><strong>Delivery Period:</strong> {{permit.delivery_start}} to {{ permit.delivery_end }}</div>
+        </div>
+      </div>
+
+      <div class="signature-section">
+        <div class="signature-block">
+          <div><strong>Approved By:</strong></div>
+          <div>{{ permit.approved_by.get_full_name|default:"................................" }}</div>
+        </div>
+        <div class="signature-block">
+          <div><strong>Permit Status:</strong></div>
+          <div><span class="status status-{{ permit.status|lower }}">{{ permit.status }}</span></div>
+        </div>
+      </div>
+
+      <!-- QR Code section at bottom center -->
+      <div class="qr-code-section">
+        <div class="qr-code-container">
+          <img src="data:image/png;base64,{{ qr_code_base64 }}" 
+               alt="Permit Verification QR Code" 
+               class="qr-code-image">
+          <p class="qr-code-text">
+            Scan to verify permit authenticity
+          </p>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p>This is a view-only version of the permit. For the original PDF, contact authorized personnel.</p>
+        <p>Generated on: {{ "now"|date:"F jS, Y, g:i a" }}</p>
+      </div>
+    </div>
+  </body>
+</html> 

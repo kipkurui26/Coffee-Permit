@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Permit #{{ permit.ref_no }}</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 1.1cm;
+
+      @bottom-center {
+        content: "Page " counter(page) " of " counter(pages);
+        font-size: 10pt;
+        color: #666;
+      }
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 1.1cm;
+      line-height: 1.4;
+      font-size: 12px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .title {
+      font-size: 17pt;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      font-size: 13pt;
+      margin-bottom: 4px;
+    }
+
+    .permit-info {
+      margin-bottom: 12px;
+    }
+
+    .note {
+      font-size: 10px;
+      margin-bottom: 15px;
+      font-style: italic;
+      padding: 6px;
+      background-color: #f8f9fa;
+      border-left: 4px solid #6c757d;
+    }
+
+    .section {
+      margin-bottom: 15px;
+    }
+
+    .section-title {
+      font-weight: bold;
+      font-size: 13pt;
+      margin-bottom: 8px;
+      padding-bottom: 2px;
+      border-bottom: 1.5px solid #333;
+    }
+
+    .two-column {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .three-column {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+    }
+
+    th,
+    td {
+      border: 1px solid #333;
+      padding: 6px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f0f0f0;
+      font-weight: bold;
+    }
+
+    .signature-line {
+      border-bottom: 1px solid #333;
+      display: inline-block;
+      margin-right: 8px;
+      height: 16px;
+    }
+
+    .signature-section {
+      margin-top: 28px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .signature-block {
+      display: inline-block;
+      vertical-align: top;
+      width: 45%;
+    }
+
+    .status {
+      padding: 4px 9px;
+      border-radius: 3px;
+      font-weight: bold;
+      display: inline-block;
+      margin-top: 2px;
+    }
+
+    .status-approved {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .signature-field {
+      margin-bottom: 16px;
+    }
+
+    .signature-label {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .page-break {
+      page-break-after: always;
+    }
+
+    .summary-box {
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+    }
+
+    .summary-title {
+      font-weight: bold;
+      margin-bottom: 7px;
+      color: #495057;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .summary-label {
+      font-weight: bold;
+    }
+
+    .summary-value {
+      color: #6c757d;
+    }
+
+    .inline-signature {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .inline-signature span.label {
+      margin-right: 6px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .qr-code-section {
+      position: fixed;
+      bottom: 0.5cm;
+      right: 0.5cm;
+      text-align: center;
+      z-index: 9999;
+      page-break-inside: avoid;
+    }
+
+    .qr-code-container {
+      display: inline-block;
+      padding: 3px;
+      border: 1px solid #ddd;
+      border-radius: 2px;
+      background-color: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .qr-code-image {
+      width: 25mm;
+      height: 25mm;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .qr-code-text {
+      font-size: 8pt;
+      margin-top: 3px;
+      color: #666;
+      text-align: center;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <div class="title">Coffee Movement Permit</div>
+    <!-- <div class="subtitle">Muranga County Government</div> -->
+  </div>
+
+  <div class="permit-info">
+    <div><strong>Ref No:</strong> {{ permit.ref_no }}</div>
+    <div><strong>Issue Date:</strong> {{ permit.approved_at|date:"F jS, Y" }}</div>
+  </div>
+
+  <div class="note">
+    Note: Permit validity is 7 (seven) days after it is issued. Transportation should strictly be between 6:00 AM to
+    6:00 PM
+  </div>
+
+  <div class="section">
+    <div class="section-title">LICENSEE INFORMATION</div>
+    <div class="two-column">
+      <div><strong>Society:</strong> {{ permit.society.name }}</div>
+      <div><strong>Factory:</strong> {{ permit.factory.name }}</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">COFFEE QUANTITY DETAILS</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Grade</th>
+          <th>Weight/Bag (kg)</th>
+          <th>No of Bags</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in permit.coffee_quantities_full %}
+        <tr>
+          <td>{{ item.coffee_grade.grade }}</td>
+          <td>{{ item.coffee_grade.weight_per_bag|floatformat:2 }}</td>
+          <td>{% if item.bags_quantity %}{{ item.bags_quantity }}{% else %}NIL{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4">No coffee grades specified</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">RESPONSIBLE PERSON ACCOMPANYING COFFEE</div>
+    <div class="inline-signature">
+      <span class="label">Full Name:</span>
+      <span class="signature-line" style="width: 300px;"></span>
+      <span class="label">ID No:</span>
+      <span class="signature-line" style="width: 100px;"></span>
+      <span class="label">Phone No:</span>
+      <span class="signature-line" style="width: 200px;"></span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">TRANSPORTER</div>
+    <div class="inline-signature">
+      <span class="label">Full Name:</span>
+      <span class="signature-line" style="width: 200px;"></span>
+      <span class="label">Vehicle Reg:</span>
+      <span class="signature-line" style="width: 200px;"></span>
+    </div>
+    <div class="inline-signature" style="margin-top: 10px;">
+      <span class="label">Make of Vehicle:</span>
+      <span class="signature-line" style="width: 350px;"></span>
+      <span style="margin-left: 6px; font-size: 10px;">(Cover board is preferred)</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">COFFEE DESTINATION</div>
+    <div class="two-column">
+      <div><strong>Mill/W.House:</strong> {{ permit.warehouse.name }}</div>
+      <div><strong>County:</strong> {{ permit.warehouse.county }}</div>
+    </div>
+    <div>
+      <div><strong>Delivery Period:</strong> {{permit.delivery_start}} to {{ permit.delivery_end }}</div>
+    </div>
+  </div>
+
+  <div class="signature-section">
+    <div class="signature-block">
+      <div class="signature-field">
+        <span class="signature-label"><strong>Society Stamp:</strong></span>
+        <span class="signature-line" style="width: 200px;"></span>
+      </div>
+      <div class="signature-field">
+        <span class="signature-label"><strong>Society Sign:</strong></span>
+        <span class="signature-line" style="width: 200px;"></span>
+      </div>
+    </div>
+    <div class="signature-block">
+      <div class="signature-field">
+        <span class="signature-label"><strong>Permit Status:</strong></span>
+        <span class="status status-{{ permit.status|lower }}">
+          {{ permit.status }}
+        </span>
+      </div>
+      <div class="signature-field">
+        <span class="signature-label"><strong>Approved By:</strong></span>
+        <span>{{ permit.approved_by.get_full_name|default:"................................" }}</span>
+        <div>
+          {% if permit.approved_by_signature_base64 %}
+          <img src="{{ permit.approved_by_signature_base64 }}" alt="Signature" style="height: 35px;" />
+          {% else %}
+          <div style="height: 60px; border-bottom: 1px solid #000; width: 200px;"></div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- QR Code section at bottom center -->
+  <div class="qr-code-section">
+    <div class="qr-code-container">
+      <img src="data:image/png;base64,{{ qr_code_base64 }}" alt="Permit Verification QR Code" class="qr-code-image">
+      <p class="qr-code-text">
+        Scan to Verify
+      </p>
+    </div>
+  </div>
+</body>
+
+</html>
